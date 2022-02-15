@@ -85,17 +85,17 @@ def main():
             valid_moves = gs.get_valid_moves()
             move_made = False
 
-        draw_gamestate(screen, gs)
+        draw_gamestate(screen, gs, valid_moves, sq_selected)
         clock.tick(MAX_FPS)
         p.display.flip()
 
 '''
 draws squares and pieces
 '''
-def draw_gamestate(screen, gs):
+def draw_gamestate(screen, gs, valid_moves, sq_selected):
     draw_board(screen)
+    draw_highlight(screen, gs, valid_moves, sq_selected)
     draw_pieces(screen, gs.board)
-
 '''
 draw the squares on the draw_board
 note: top left is always light
@@ -117,7 +117,29 @@ def draw_pieces(screen, board):
             if piece != '--':
                 screen.blit(IMAGES[piece], p.Rect(c*SQ_SIZE, r*SQ_SIZE, SQ_SIZE, SQ_SIZE))
 
+''' 
+Highlight square selected, and show possible moves
+'''
+def draw_highlight(screen, gs, valid_moves, sq_selected):
+    if sq_selected != ():   # square needs not be empty
+        row, col = sq_selected
+        if gs.board[row][col][0] == ('w' if gs.whites_turn else 'b'):   # check if piece can be moved
+            # highlighting selected square
+            s = p.Surface((SQ_SIZE, SQ_SIZE))
+            s.set_alpha(100) # transparency: 0 = transparent, 255 = opaque
+            s.fill(p.Color(40, 255, 40))
+            screen.blit(s, (col*SQ_SIZE, row*SQ_SIZE))
 
+            s.fill(p.Color(80, 80, 255))
+            for move in valid_moves:
+                if move.start_row == row and move.start_col == col:
+                    screen.blit(s, (move.end_col*SQ_SIZE, move.end_row*SQ_SIZE))
+
+''' 
+Chess Piece Move Animation
+'''
+def animate_move(move, screen, board, clock):
+    pass
 
 if __name__ == '__main__':
     main()
