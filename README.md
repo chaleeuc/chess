@@ -1,8 +1,17 @@
-# chess
-chess engine using python
+# Python Chess Engine
+## Information
 
-requirements at requirements.txt
+- This repository is a result of following a 16 series tutorial done by Eddie Sharick, sometimes making improvements on my own
 
-run in command line using: python chessmain.py
+## Todo
+- There is currently a bug with castling, where the engine will let king castle regardless of empty squares being attacked.
 
-castling doesn't work, but most of other logic works
+## Tech
+- Python 3.9.6
+- Pygame 2.1.2
+
+## Instruction
+1. install requirements.txt, preferably in venv
+2. run chessmain.py
+3. press z to undo a move
+4. press r to restart the game
