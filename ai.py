@@ -38,6 +38,7 @@ def negamax(gs, valid_moves, depth, turn):
 
         gs.undo_a_move()    
 
+    return max_score
 
 ''' take the gamestate of the engine 
     ## ideas to check board positions
