@@ -4,6 +4,7 @@ responsible for handling user input and displaying game state
 '''
 import pygame as p
 import engine
+import ai
 
 WIDTH = HEIGHT = 512
 DIMENSION = 8
@@ -44,14 +45,21 @@ def main():
 
     gameover = False    
 
+    # AI TESTING PURPOSE
+    player_one = True   # True if human is playing, else False
+    player_two = False   # True if human is playing, else False
+
     while running:
+        human_turn = (gs.whites_turn and player_one) or (not gs.whites_turn and player_two)       
+
         for e in p.event.get():
             if e.type == p.QUIT:
                 running = False
 
             # Mouse Event Handler
             elif(e.type == p.MOUSEBUTTONDOWN):
-                if not gameover:
+                # if not gameover:                   
+                if not gameover and human_turn:     # for AI testing Purpose
                     location = p.mouse.get_pos()
                     col = location[0] // SQ_SIZE
                     row = location[1] // SQ_SIZE
@@ -67,6 +75,7 @@ def main():
                     if len(player_clicks) == 2:                    
                         # make the move
                         move = engine.Move(player_clicks[0], player_clicks[1], gs.board)
+                        # check chess notation
                         print(move.get_chess_notation())
 
                         # move validation
@@ -88,6 +97,7 @@ def main():
                     gs.undo_a_move()
                     move_made = True
                     animate = False
+                    gameover = False
 
                 # reset board, when r is pressed
                 if e.key == p.K_r:
@@ -97,6 +107,16 @@ def main():
                     player_clicks = []  
                     move_made = False
                     animate = False
+                    gameover = False
+
+        # AI move Generation
+        if not gameover and not human_turn:
+            ai_move = ai.negamax_helper(gs, valid_moves)
+            if ai_move == None:
+                ai_move = ai.find_random_move(valid_moves)      # Implement this Asynchronously
+            gs.make_a_move(ai_move)
+            move_made = True
+            animate = True
 
         if move_made:
             if animate:
@@ -176,7 +196,7 @@ def highlight_last_move(screen, gs):
         move = gs.move_log[-1]
         s = p.Surface((SQ_SIZE, SQ_SIZE))
         s.set_alpha(100)
-        s.fill(p.Color(255, 40, 80))
+        s.fill(p.Color(40, 255, 40))
         screen.blit(s, (move.start_col*SQ_SIZE, move.start_row*SQ_SIZE))
         screen.blit(s, (move.end_col*SQ_SIZE, move.end_row*SQ_SIZE))
 

@@ -127,6 +127,9 @@ class GameState():
             self.castling_rights_log.pop()
             self.castling_rights = self.castling_rights_log[-1]
 
+            self.checkmate = False
+            self.stalemate = False
+
     def update_castling_rights(self, move):
         if move.piece_moved == 'wK':
             self.castling_rights.white_king_side = False
@@ -164,9 +167,10 @@ class GameState():
     Check for validity of player move
     '''
     def get_valid_moves(self):
-        for log in self.castling_rights_log:
-            print(log.white_king_side, log.white_queen_side, log.black_king_side, log.black_queen_side, end=', ')
-        print()
+        # castling right check
+#        for log in self.castling_rights_log:
+#            print(log.white_king_side, log.white_queen_side, log.black_king_side, log.black_queen_side, end=', ')
+#        print()
         temp_castle_rights = CastlingRights(self.castling_rights.white_king_side, self.castling_rights.white_queen_side, 
                                             self.castling_rights.black_king_side, self.castling_rights.black_queen_side)        
         moves = []
